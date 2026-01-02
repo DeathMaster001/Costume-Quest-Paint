@@ -10,43 +10,14 @@ MAP_HEIGHT = 64
 
 # Paths to your tile images
 TILE_IMAGES = {
-    "Grass": "source/images/newmaptest/tiles/grass.png",
-    "Road": "source/images/newmaptest/tiles/road.png",
-    "Fence": "source/images/newmaptest/tiles/fence.png",
-    "Void": "source/images/newmaptest/tiles/void.png"
+    "Grass": "source/images/tiles/grass.png",
+    "Road": "source/images/tiles/road.png",
+    "Fence": "source/images/tiles/fence.png",
+    "Void": "source/images/tiles/void.png"
 }
 
 # Paths to your object images grouped by category
 OBJECT_IMAGES_TABS = {
-    "Houses": {
-        "House": "source/images/newmaptest/houses/house.png",
-        "Monster House": "source/images/newmaptest/houses/monster_house.png"
-    },
-    "Player": {
-        "Robot": "source/images/costumes/costume_robot.png",
-        "Knight": "source/images/costumes/costume_knight.png",
-        "Statue of Liberty": "source/images/costumes/costume_statueofliberty.png",
-        "Space Warrior": "source/images/costumes/costume_spacewarrior.png",
-        "Ninja": "source/images/costumes/costume_ninja.png",
-        "Unicorn": "source/images/costumes/costume_unicorn.png",
-        "Pumpkin": "source/images/costumes/costume_pumpkin.png",
-        "Vampire": "source/images/costumes/costume_vampire.png",
-        "French Fries": "source/images/costumes/costume_frenchfries.png",
-        "Black Cat": "source/images/costumes/costume_blackcat.png",
-        "Grubbin": "source/images/costumes/costume_grubbin.png"
-    },
-    "Quests": {
-        "Card": "source/images/newmaptest/quests/card.png",
-        "Cherries": "source/images/newmaptest/quests/cherries.png",
-        "NPC": "source/images/newmaptest/quests/npc.png"
-    },
-    "Exploration": {
-        "Boost": "source/images/newmaptest/exploration/boost.png",
-        "Shield": "source/images/newmaptest/exploration/shield.png",
-        "Glow": "source/images/newmaptest/exploration/glow.png",
-        "Sneak": "source/images/newmaptest/exploration/sneak.png",
-        "Lure": "source/images/newmaptest/exploration/lure.png"
-    },
     "Battle Stamps": {
         "Fang of the Wolf": "source/images/battle_stamps/stamp_001.png",
         "Black Cat (Card)": "source/images/battle_stamps/stamp_002.png",
@@ -128,6 +99,35 @@ OBJECT_IMAGES_TABS = {
         "Boogie Pie": "source/images/cards/trickcard_052.png",
         "Human Crackers": "source/images/cards/trickcard_053.png",
         "Gloop": "source/images/cards/trickcard_054.png"
+    },
+    "Houses": {
+        "House": "source/images/houses/house.png",
+        "Monster House": "source/images/houses/monster_house.png"
+    },
+    "Costumes": {
+        "Robot": "source/images/costumes/costume_robot.png",
+        "Knight": "source/images/costumes/costume_knight.png",
+        "Statue of Liberty": "source/images/costumes/costume_statueofliberty.png",
+        "Space Warrior": "source/images/costumes/costume_spacewarrior.png",
+        "Ninja": "source/images/costumes/costume_ninja.png",
+        "Unicorn": "source/images/costumes/costume_unicorn.png",
+        "Pumpkin": "source/images/costumes/costume_pumpkin.png",
+        "Vampire": "source/images/costumes/costume_vampire.png",
+        "French Fries": "source/images/costumes/costume_frenchfries.png",
+        "Black Cat": "source/images/costumes/costume_blackcat.png",
+        "Grubbin": "source/images/costumes/costume_grubbin.png"
+    },
+    "Quests": {
+        "Card": "source/images/quests/card.png",
+        "Cherries": "source/images/quests/cherries.png",
+        "NPC": "source/images/quests/npc.png"
+    },
+    "Exploration": {
+        "Boost": "source/images/exploration/boost.png",
+        "Shield": "source/images/exploration/shield.png",
+        "Glow": "source/images/exploration/glow.png",
+        "Sneak": "source/images/exploration/sneak.png",
+        "Lure": "source/images/exploration/lure.png"
     }
 }
 
