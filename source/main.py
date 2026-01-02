@@ -10,9 +10,9 @@ MAP_HEIGHT = 64
 
 # Paths to your tile images
 TILE_IMAGES = {
+    "Fence": "source/images/tiles/fence.png",
     "Grass": "source/images/tiles/grass.png",
     "Road": "source/images/tiles/road.png",
-    "Fence": "source/images/tiles/fence.png",
     "Void": "source/images/tiles/void.png"
 }
 
