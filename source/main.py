@@ -44,6 +44,19 @@ OBJECT_IMAGES_TABS = {
         "No-Eyed Vampire Bat": "source/images/battle_stamps/stamp_023.png",
         "Bowl of Bloodshot Eyeballs": "source/images/battle_stamps/stamp_024.png"
     },
+    "Costumes": {
+        "Robot": "source/images/costumes/costume_robot.png",
+        "Knight": "source/images/costumes/costume_knight.png",
+        "Statue of Liberty": "source/images/costumes/costume_statueofliberty.png",
+        "Space Warrior": "source/images/costumes/costume_spacewarrior.png",
+        "Ninja": "source/images/costumes/costume_ninja.png",
+        "Unicorn": "source/images/costumes/costume_unicorn.png",
+        "Pumpkin": "source/images/costumes/costume_pumpkin.png",
+        "Vampire": "source/images/costumes/costume_vampire.png",
+        "French Fries": "source/images/costumes/costume_frenchfries.png",
+        "Black Cat": "source/images/costumes/costume_blackcat.png",
+        "Grubbin": "source/images/costumes/costume_grubbin.png"
+    },
     "Creepy Treat Cards": {
         "Raz-Ums": "source/images/cards/trickcard_001.png",
         "Glop": "source/images/cards/trickcard_002.png",
@@ -100,34 +113,21 @@ OBJECT_IMAGES_TABS = {
         "Human Crackers": "source/images/cards/trickcard_053.png",
         "Gloop": "source/images/cards/trickcard_054.png"
     },
-    "Houses": {
-        "House": "source/images/houses/house.png",
-        "Monster House": "source/images/houses/monster_house.png"
-    },
-    "Costumes": {
-        "Robot": "source/images/costumes/costume_robot.png",
-        "Knight": "source/images/costumes/costume_knight.png",
-        "Statue of Liberty": "source/images/costumes/costume_statueofliberty.png",
-        "Space Warrior": "source/images/costumes/costume_spacewarrior.png",
-        "Ninja": "source/images/costumes/costume_ninja.png",
-        "Unicorn": "source/images/costumes/costume_unicorn.png",
-        "Pumpkin": "source/images/costumes/costume_pumpkin.png",
-        "Vampire": "source/images/costumes/costume_vampire.png",
-        "French Fries": "source/images/costumes/costume_frenchfries.png",
-        "Black Cat": "source/images/costumes/costume_blackcat.png",
-        "Grubbin": "source/images/costumes/costume_grubbin.png"
-    },
-    "Quests": {
-        "Card": "source/images/quests/card.png",
-        "Cherries": "source/images/quests/cherries.png",
-        "NPC": "source/images/quests/npc.png"
-    },
     "Exploration": {
         "Boost": "source/images/exploration/boost.png",
         "Shield": "source/images/exploration/shield.png",
         "Glow": "source/images/exploration/glow.png",
         "Sneak": "source/images/exploration/sneak.png",
         "Lure": "source/images/exploration/lure.png"
+    },
+    "Houses": {
+        "House": "source/images/houses/house.png",
+        "Monster House": "source/images/houses/monster_house.png"
+    },
+    "Quests": {
+        "Card": "source/images/quests/card.png",
+        "Cherries": "source/images/quests/cherries.png",
+        "NPC": "source/images/quests/npc.png"
     }
 }
 
