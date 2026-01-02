@@ -29,6 +29,6 @@ A Python GUI inspired Paint program that allows painting on a 64x64 grid using i
 - When fully zoomed out, dragging the canvas may appear laggy. This will likely be fixed or at least improved.
 
 ## Credits
-- Thanks goes to Tasha Sounart/Double Fine Productions for creating Costume Quest to begin with.
-- Thanks goes to bgbennyboy (Bennyboy) for creating the program [Double Fine Explorer](https://github.com/bgbennyboy/DoubleFine-Explorer). This project wouldn't exist without the image extraction feature that DFE has.
-- Thanks to the Costume Quest Speedrunning Community. One of the top speedrunning communitites I have been in. Can't thank them enough for there supportiveness of my save editing/modding non-sense.
+- Tasha Sounart / Double Fine Productions — for creating Costume Quest.
+- bgbennyboy (Bennyboy) — creator of [Double Fine Explorer](https://github.com/bgbennyboy/DoubleFine-Explorer). This project would not exist without its image extraction capabilities.
+- The Costume Quest Speedrunning Community — one of the most welcoming speedrunning communities I’ve been part of. Huge thanks for all the support with my save-editing and modding nonsense.
