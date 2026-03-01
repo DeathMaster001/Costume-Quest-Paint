@@ -2,13 +2,16 @@
 A Python GUI inspired Paint program that allows painting on a 64x64 grid using images extracted from the Costume Quest PC (Steam) release. Initially made for designing Costume Quest maps easier.
 
 ## Controls:
-- Left Click — Select / Place
+- Select / Place — Left Click
 (Hold and drag for continuous placement)
 
-- Right Click — Delete
+- Delete Objects — Right Click
 (Hold and drag for continuous deletion)
 
-- Pan Canvas - Alt + Left Click + Drag or Middle Click + Drag
+- Delete Tiles — Shift + Right Click
+(Hold and drag for continuous deletion)
+
+- Pan Canvas - Middle Click + Drag
 
 - Zoom — Mouse scroll wheel or on-screen buttons
 
@@ -23,12 +26,10 @@ A Python GUI inspired Paint program that allows painting on a 64x64 grid using i
 - Recent Files + Auto-save
 
 ## Limitations/Bugs:
-- DLC support is not yet implemented.
-- Tile deletion does not currently work — tiles must be replaced instead. This will be fixed.
+- DLC objects have not yet been added yet.
 - Maps are JSON files, these are not images. Opening them will just lead to sadness.
-- When fully zoomed out, dragging the canvas may appear laggy. This will likely be fixed or at least improved.
 
 ## Credits
 - Tasha Sounart / Double Fine Productions — for creating Costume Quest.
-- bgbennyboy (Bennyboy) — creator of [Double Fine Explorer](https://github.com/bgbennyboy/DoubleFine-Explorer). This project would not exist without its image extraction capabilities.
+- [Double Fine Tool](https://github.com/patrickmollohan/doublefinetool) and [Double Fine Explorer](https://github.com/bgbennyboy/DoubleFine-Explorer). This project would not exist without there image extraction capabilities.
 - The Costume Quest Speedrunning Community — one of the most welcoming speedrunning communities I’ve been part of. Huge thanks for all the support with my save-editing and modding nonsense.

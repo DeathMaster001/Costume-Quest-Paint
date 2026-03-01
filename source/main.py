@@ -177,6 +177,7 @@ class TileMapEditor(ttk.Frame):
         self.selected_tile = None
         self.is_painting = False
         self.is_erasing = False
+        self.is_erasing_tile = False
         self.is_panning = False
         self.pan_start = (0, 0)
         self.tile_items = [[None for _ in range(
@@ -282,12 +283,12 @@ class TileMapEditor(ttk.Frame):
         self.canvas.bind("<Button-3>", self.start_erase)
         self.canvas.bind("<B3-Motion>", self.erase)
         self.canvas.bind("<ButtonRelease-3>", self.stop_erase)
+        self.canvas.bind("<Shift-Button-3>", self.start_erase_tile)
+        self.canvas.bind("<Shift-B3-Motion>", self.erase_tile)
+        self.canvas.bind("<Shift-ButtonRelease-3>", self.stop_erase_tile)
         self.canvas.bind("<ButtonPress-2>", self.start_pan)
         self.canvas.bind("<B2-Motion>", self.pan)
         self.canvas.bind("<ButtonRelease-2>", self.stop_pan)
-        self.canvas.bind("<Alt-Button-1>", self.start_pan)
-        self.canvas.bind("<Alt-B1-Motion>", self.pan)
-        self.canvas.bind("<Alt-ButtonRelease-1>", self.stop_pan)
         self.canvas.bind("<MouseWheel>", self.mouse_zoom)
         self.canvas.bind("<Button-4>", self.mouse_zoom)
         self.canvas.bind("<Button-5>", self.mouse_zoom)
@@ -428,6 +429,22 @@ class TileMapEditor(ttk.Frame):
 
     def stop_erase(self, event):
         self.is_erasing = False
+
+    def start_erase_tile(self, event):
+        self.is_erasing_tile = True
+        self.erase_tile(event)
+
+    def erase_tile(self, event):
+        if not self.is_erasing_tile:
+            return
+        x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
+        y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
+        if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
+            self.tile_map[y][x] = "Void"  # default empty tile
+            self.update_tile(x, y)
+
+    def stop_erase_tile(self, event):
+        self.is_erasing_tile = False
 
     def _place_or_tile(self, event):
         x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
