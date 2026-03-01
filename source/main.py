@@ -57,6 +57,32 @@ OBJECT_IMAGES_TABS = {
         "Black Cat": "source/images/costumes/costume_blackcat.png",
         "Grubbin": "source/images/costumes/costume_grubbin.png"
     },
+    "Costume Pieces": {
+        "Aluminum Foil": "source/images/costume_pieces/aluminumfoil.png",
+        "Black Cloth": "source/images/costume_pieces/blackcloth.png",
+        "Burlap Sack": "source/images/costume_pieces/burlapsack.png",
+        "Cardboard": "source/images/costume_pieces/cardboard.png",
+        "Cardboard Box": "source/images/costume_pieces/cardboardbox.png",
+        "Dirty Socks": "source/images/costume_pieces/dirtysocks.png",
+        "Empty Soda Bottle": "source/images/costume_pieces/emptysodabottle.png",
+        "Fabric": "source/images/costume_pieces/fabric.png",
+        "Feather Duster": "source/images/costume_pieces/featherduster.png",
+        "Glitter": "source/images/costume_pieces/glitter.png",
+        "Grubbin Mask": "source/images/costume_pieces/grubbinmask.png",
+        "Leaves": "source/images/costume_pieces/leaves.png",
+        "Orange Paint": "source/images/costume_pieces/orangepaint.png",
+        "Paper Mache": "source/images/costume_pieces/papermache.png",
+        "Rope": "source/images/costume_pieces/rope.png",
+        "Safety Visor": "source/images/costume_pieces/safetyvisor.png",
+        "Scarf": "source/images/costume_pieces/scarf.png",
+        "Scary Fangs": "source/images/costume_pieces/scaryfangs.png",
+        "Sheets": "source/images/costume_pieces/sheet.png",
+        "Snow Boots": "source/images/costume_pieces/snowboots.png",
+        "Sweat Pants": "source/images/costume_pieces/sweatpants.png",
+        "Wheelies": "source/images/costume_pieces/wheelies.png",
+        "White Makeup": "source/images/costume_pieces/whitemakeup.png",
+        "Yarn": "source/images/costume_pieces/yarn.png"
+    },
     "Creepy Treat Cards": {
         "Raz-Ums": "source/images/cards/trickcard_001.png",
         "Glop": "source/images/cards/trickcard_002.png",
@@ -125,9 +151,13 @@ OBJECT_IMAGES_TABS = {
         "Monster House": "source/images/houses/monster_house.png"
     },
     "Quests": {
+        "Badge": "source/images/quests/badge.png",
         "Card": "source/images/quests/card.png",
         "Cherries": "source/images/quests/cherries.png",
-        "NPC": "source/images/quests/npc.png"
+        "Monster Horn": "source/images/quests/monster_horn.png",
+        "NPC": "source/images/quests/npc.png",
+        "Store": "source/images/quests/store.png",
+        "Tickets": "source/images/quests/tickets.png"
     }
 }
 
