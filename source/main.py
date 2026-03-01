@@ -206,6 +206,8 @@ class TileMapEditor(ttk.Frame):
                    command=self.load_map).pack(side="left", padx=2)
         ttk.Button(controls_frame, text="Save Map",
                    command=self.save_map).pack(side="left", padx=2)
+        ttk.Button(controls_frame, text="Export as PNG",
+                   command=self.export_png).pack(side="left", padx=2)
         ttk.Button(controls_frame, text="Zoom +",
                    command=lambda: self.change_zoom(0.25)).pack(side="left", padx=2)
         ttk.Button(controls_frame, text="Zoom -",
@@ -563,6 +565,48 @@ class TileMapEditor(ttk.Frame):
         self.tile_map = data.get("tiles", self.tile_map)
         self.object_map = data.get("objects", self.object_map)
         self.draw_map()
+
+    def export_png(self):
+        file_path = filedialog.asksaveasfilename(
+            defaultextension=".png",
+            filetypes=[("PNG Files", "*.png")]
+        )
+        if not file_path:
+            return
+
+        # Final image size (full resolution, not zoomed)
+        width = MAP_WIDTH * TILE_SIZE
+        height = MAP_HEIGHT * TILE_SIZE
+
+        # Create blank image
+        final_image = Image.new("RGBA", (width, height))
+
+        # Draw tiles first
+        for y in range(MAP_HEIGHT):
+            for x in range(MAP_WIDTH):
+                tile_name = self.tile_map[y][x]
+                tile_img = self.tiles[tile_name]
+
+                final_image.paste(
+                    tile_img,
+                    (x * TILE_SIZE, y * TILE_SIZE)
+                )
+
+        # Draw objects on top
+        for y in range(MAP_HEIGHT):
+            for x in range(MAP_WIDTH):
+                obj_name = self.object_map[y][x]
+                if obj_name:
+                    obj_img = self.objects[obj_name]
+
+                    # Use alpha so transparency works
+                    final_image.paste(
+                        obj_img,
+                        (x * TILE_SIZE, y * TILE_SIZE),
+                        obj_img
+                    )
+
+        final_image.save(file_path)
 
 
 if __name__ == "__main__":
