@@ -11,7 +11,9 @@ A Python GUI inspired Paint program that allows painting on a 64x64 grid using i
 - Delete Tiles — Shift + Right Click
 (Hold and drag for continuous deletion)
 
-- Pan Canvas - Middle Click + Drag
+- Pan Canvas — Middle Click + Drag
+
+- Undo / Redo — Ctrl + Z / Ctrl + Y
 
 - Zoom — Mouse scroll wheel or on-screen buttons
 

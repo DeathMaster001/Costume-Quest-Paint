@@ -185,6 +185,10 @@ class TileMapEditor(ttk.Frame):
         self.object_items = [[None for _ in range(
             MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
 
+        # --- Undo / Redo ---
+        self.undo_stack = []
+        self.redo_stack = []
+
         # Persistent images
         self.tk_tiles_full = {}
         self.tk_objects_full = {}
@@ -295,9 +299,19 @@ class TileMapEditor(ttk.Frame):
         self.canvas.bind("<Button-4>", self.mouse_zoom)
         self.canvas.bind("<Button-5>", self.mouse_zoom)
         self.canvas.bind("<Configure>", self.on_canvas_resize)
+        self.root.bind("<Control-z>", self.undo)
+        self.root.bind("<Control-y>", self.redo)
 
         # Draw initial map
         self.draw_map()
+
+    def record_action(self, action):
+        self.undo_stack.append(action)
+        self.redo_stack.clear()
+
+        # limit undo size
+        if len(self.undo_stack) > 200:
+            self.undo_stack.pop(0)
 
     def init_map_view(self):
         self.fit_map_to_canvas()
@@ -405,6 +419,7 @@ class TileMapEditor(ttk.Frame):
 
     # --- Paint / erase ---
     def start_paint(self, event):
+        self.current_stroke = []
         self.is_painting = True
         self.paint(event)
 
@@ -414,9 +429,13 @@ class TileMapEditor(ttk.Frame):
         self._place_or_tile(event)
 
     def stop_paint(self, event):
+        if self.current_stroke:
+            self.record_action(self.current_stroke)
+        self.current_stroke = []
         self.is_painting = False
 
     def start_erase(self, event):
+        self.current_stroke = []
         self.is_erasing = True
         self.erase(event)
 
@@ -425,14 +444,27 @@ class TileMapEditor(ttk.Frame):
             return
         x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
         y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
-        if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
+
+        if any(a[1] == x and a[2] == y for a in self.current_stroke):
+            return
+
+        if not (0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT):
+            return
+
+        old = self.object_map[y][x]
+        if old is not None:
+            self.current_stroke.append(("object", x, y, old, None))
             self.object_map[y][x] = None
             self.update_object(x, y)
 
     def stop_erase(self, event):
+        if self.current_stroke:
+            self.record_action(self.current_stroke)
+        self.current_stroke = []
         self.is_erasing = False
 
     def start_erase_tile(self, event):
+        self.current_stroke = []
         self.is_erasing_tile = True
         self.erase_tile(event)
 
@@ -441,25 +473,106 @@ class TileMapEditor(ttk.Frame):
             return
         x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
         y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
-        if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
-            self.tile_map[y][x] = "Void"  # default empty tile
+
+        if any(a[1] == x and a[2] == y for a in self.current_stroke):
+            return
+
+        if not (0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT):
+            return
+
+        old = self.tile_map[y][x]
+        new = "Void"
+        if old != new:
+            self.current_stroke.append(("tile", x, y, old, new))
+            self.tile_map[y][x] = new
             self.update_tile(x, y)
 
     def stop_erase_tile(self, event):
+        if self.current_stroke:
+            self.record_action(self.current_stroke)
+        self.current_stroke = []
         self.is_erasing_tile = False
 
     def _place_or_tile(self, event):
         x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
         y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
 
+        if any(a[1] == x and a[2] == y for a in self.current_stroke):
+            return
+
         if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
+
             if self.selected_object:
-                self.object_map[y][x] = self.selected_object
-                self.update_object(x, y)
+                old = self.object_map[y][x]
+                new = self.selected_object
+                if old != new:
+                    self.current_stroke.append(("object", x, y, old, new))
+                    self.object_map[y][x] = new
+                    self.update_object(x, y)
 
             elif self.selected_tile:
-                self.tile_map[y][x] = self.selected_tile
-                self.update_tile(x, y)
+                old = self.tile_map[y][x]
+                new = self.selected_tile
+                if old != new:
+                    self.current_stroke.append(("tile", x, y, old, new))
+                    self.tile_map[y][x] = new
+                    self.update_tile(x, y)
+
+    def undo(self, event=None):
+        if not self.undo_stack:
+            return
+
+        action = self.undo_stack.pop()
+        self.redo_stack.append(action)
+
+        # --- Handle stroke ---
+        if isinstance(action, list):
+            for kind, x, y, old, new in reversed(action):
+                if kind == "tile":
+                    self.tile_map[y][x] = old
+                    self.update_tile(x, y)
+                else:
+                    self.object_map[y][x] = old
+                    self.update_object(x, y)
+            return
+
+        # --- Handle single ---
+        kind, x, y, old, new = action
+
+        if kind == "tile":
+            self.tile_map[y][x] = old
+            self.update_tile(x, y)
+        else:
+            self.object_map[y][x] = old
+            self.update_object(x, y)
+
+    def redo(self, event=None):
+        if not self.redo_stack:
+            return
+
+        action = self.redo_stack.pop()
+        self.undo_stack.append(action)
+
+        # --- Handle stroke ---
+        if isinstance(action, list):
+            for kind, x, y, old, new in action:
+                if kind == "tile":
+                    self.tile_map[y][x] = new
+                    self.update_tile(x, y)
+                else:
+                    self.object_map[y][x] = new
+                    self.update_object(x, y)
+            return
+
+        # --- Handle single ---
+        kind, x, y, old, new = action
+
+        if kind == "tile":
+            self.tile_map[y][x] = new
+            self.update_tile(x, y)
+        else:
+            self.object_map[y][x] = new
+            self.update_object(x, y)
 
     # --- Pan ---
     def start_pan(self, event):
@@ -565,6 +678,8 @@ class TileMapEditor(ttk.Frame):
         self.tile_map = data.get("tiles", self.tile_map)
         self.object_map = data.get("objects", self.object_map)
         self.draw_map()
+        self.undo_stack.clear()
+        self.redo_stack.clear()
 
     def export_png(self):
         file_path = filedialog.asksaveasfilename(

@@ -23,3 +23,6 @@ pip-wheel-metadata/
 .DS_Store
 .env
 .envrc
+
+# Maps
+*.json
