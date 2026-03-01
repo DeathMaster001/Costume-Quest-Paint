@@ -301,6 +301,10 @@ class TileMapEditor(ttk.Frame):
         self.canvas.bind("<Configure>", self.on_canvas_resize)
         self.root.bind("<Control-z>", self.undo)
         self.root.bind("<Control-y>", self.redo)
+        self.root.bind("<Control-plus>", lambda e: self.change_zoom(0.25))
+        # some keyboards
+        self.root.bind("<Control-equal>", lambda e: self.change_zoom(0.25))
+        self.root.bind("<Control-minus>", lambda e: self.change_zoom(-0.25))
 
         # Draw initial map
         self.draw_map()

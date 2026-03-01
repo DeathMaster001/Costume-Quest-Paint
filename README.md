@@ -15,7 +15,7 @@ A Python GUI inspired Paint program that allows painting on a 64x64 grid using i
 
 - Undo / Redo — Ctrl + Z / Ctrl + Y
 
-- Zoom — Mouse scroll wheel or on-screen buttons
+- Zoom — Ctrl - / Ctrl + / Mouse scroll wheel or on-screen buttons
 
 ## Features I going to try adding:
 - Undo / Redo
