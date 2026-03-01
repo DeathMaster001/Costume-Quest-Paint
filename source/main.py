@@ -167,6 +167,7 @@ class TileMapEditor(ttk.Frame):
         super().__init__(parent)
         self.root = self.winfo_toplevel()
         self.pack(fill="both", expand=True)
+        self._initialized = False
 
         # --- Map state ---
         self.zoom = 1.0
@@ -290,9 +291,44 @@ class TileMapEditor(ttk.Frame):
         self.canvas.bind("<MouseWheel>", self.mouse_zoom)
         self.canvas.bind("<Button-4>", self.mouse_zoom)
         self.canvas.bind("<Button-5>", self.mouse_zoom)
+        self.canvas.bind("<Configure>", self.on_canvas_resize)
 
         # Draw initial map
         self.draw_map()
+
+    def init_map_view(self):
+        self.fit_map_to_canvas()
+        self.draw_map()
+
+    def on_canvas_resize(self, event):
+        if not self._initialized:
+            self.fit_map_to_canvas()
+            self.draw_map()
+            self._initialized = True
+
+    def center_map(self):
+        canvas_width = self.canvas.winfo_width() or self.canvas.winfo_reqwidth()
+        canvas_height = self.canvas.winfo_height() or self.canvas.winfo_reqheight()
+
+        map_pixel_width = MAP_WIDTH * TILE_SIZE * self.zoom
+        map_pixel_height = MAP_HEIGHT * TILE_SIZE * self.zoom
+
+        # Offsets to center the map
+        self.offset_x = (canvas_width - map_pixel_width) / 2
+        self.offset_y = (canvas_height - map_pixel_height) / 2
+
+    def fit_map_to_canvas(self):
+        canvas_width = self.canvas.winfo_width() or self.canvas.winfo_reqwidth()
+        canvas_height = self.canvas.winfo_height() or self.canvas.winfo_reqheight()
+
+        zoom_x = canvas_width / (MAP_WIDTH * TILE_SIZE)
+        zoom_y = canvas_height / (MAP_HEIGHT * TILE_SIZE)
+
+        # Choose the smaller one to fit both width and height
+        self.zoom = min(zoom_x, zoom_y)
+
+        # Center the map
+        self.center_map()
 
     # --- Selection ---
     def select_object(self, obj_name):
@@ -312,8 +348,8 @@ class TileMapEditor(ttk.Frame):
 
                 tile_img = self.get_tk_tile(self.tile_map[y][x])
                 self.tile_items[y][x] = self.canvas.create_image(
-                    int(x * TILE_SIZE * self.zoom + self.offset_x),
-                    int(y * TILE_SIZE * self.zoom + self.offset_y),
+                    int(round(x * TILE_SIZE * self.zoom + self.offset_x)),
+                    int(round(y * TILE_SIZE * self.zoom + self.offset_y)),
                     anchor="nw",
                     image=tile_img
                 )
@@ -322,8 +358,8 @@ class TileMapEditor(ttk.Frame):
                 if obj:
                     obj_img = self.get_tk_object(obj)
                     self.object_items[y][x] = self.canvas.create_image(
-                        int(x * TILE_SIZE * self.zoom + self.offset_x),
-                        int(y * TILE_SIZE * self.zoom + self.offset_y),
+                        int(round(x * TILE_SIZE * self.zoom + self.offset_x)),
+                        int(round(y * TILE_SIZE * self.zoom + self.offset_y)),
                         anchor="nw",
                         image=obj_img
                     )
@@ -351,16 +387,16 @@ class TileMapEditor(ttk.Frame):
     def get_tk_tile(self, tile_name):
         key = (tile_name, self.zoom)
         if key not in self.tk_tiles_full:
-            img = self.tiles[tile_name].resize(
-                (int(TILE_SIZE * self.zoom), int(TILE_SIZE * self.zoom)), Image.NEAREST)
+            size = round(TILE_SIZE * self.zoom)
+            img = self.tiles[tile_name].resize((size, size), Image.NEAREST)
             self.tk_tiles_full[key] = ImageTk.PhotoImage(img)
         return self.tk_tiles_full[key]
 
     def get_tk_object(self, obj_name):
         key = (obj_name, self.zoom)
         if key not in self.tk_objects_full:
-            img = self.objects[obj_name].resize(
-                (int(TILE_SIZE * self.zoom), int(TILE_SIZE * self.zoom)), Image.NEAREST)
+            size = round(TILE_SIZE * self.zoom)
+            img = self.objects[obj_name].resize((size, size), Image.NEAREST)
             self.tk_objects_full[key] = ImageTk.PhotoImage(img)
         return self.tk_objects_full[key]
 
