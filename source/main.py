@@ -178,6 +178,10 @@ class TileMapEditor(ttk.Frame):
         self.is_erasing = False
         self.is_panning = False
         self.pan_start = (0, 0)
+        self.tile_items = [[None for _ in range(
+            MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
+        self.object_items = [[None for _ in range(
+            MAP_WIDTH)] for _ in range(MAP_HEIGHT)]
 
         # Persistent images
         self.tk_tiles_full = {}
@@ -302,31 +306,47 @@ class TileMapEditor(ttk.Frame):
     # --- Draw map ---
     def draw_map(self):
         self.canvas.delete("all")
+
         for y in range(MAP_HEIGHT):
             for x in range(MAP_WIDTH):
-                tile_name = self.tile_map[y][x]
-                obj_name = self.object_map[y][x]
 
-                # Draw tile
-                tile_img = self.get_tk_tile(tile_name)
-                self.canvas.create_image(
-                    x * TILE_SIZE * self.zoom + self.offset_x,
-                    y * TILE_SIZE * self.zoom + self.offset_y,
+                tile_img = self.get_tk_tile(self.tile_map[y][x])
+                self.tile_items[y][x] = self.canvas.create_image(
+                    int(x * TILE_SIZE * self.zoom + self.offset_x),
+                    int(y * TILE_SIZE * self.zoom + self.offset_y),
                     anchor="nw",
-                    image=tile_img,
-                    tags=f"tile_{x}_{y}"
+                    image=tile_img
                 )
 
-                # Draw object
-                if obj_name:
-                    obj_img = self.get_tk_object(obj_name)
-                    self.canvas.create_image(
-                        x * TILE_SIZE * self.zoom + self.offset_x,
-                        y * TILE_SIZE * self.zoom + self.offset_y,
+                obj = self.object_map[y][x]
+                if obj:
+                    obj_img = self.get_tk_object(obj)
+                    self.object_items[y][x] = self.canvas.create_image(
+                        int(x * TILE_SIZE * self.zoom + self.offset_x),
+                        int(y * TILE_SIZE * self.zoom + self.offset_y),
                         anchor="nw",
-                        image=obj_img,
-                        tags=f"obj_{x}_{y}"
+                        image=obj_img
                     )
+
+    def update_tile(self, x, y):
+        tile_img = self.get_tk_tile(self.tile_map[y][x])
+        self.canvas.itemconfig(self.tile_items[y][x], image=tile_img)
+
+    def update_object(self, x, y):
+        # delete old object
+        if self.object_items[y][x]:
+            self.canvas.delete(self.object_items[y][x])
+            self.object_items[y][x] = None
+
+        obj = self.object_map[y][x]
+        if obj:
+            obj_img = self.get_tk_object(obj)
+            self.object_items[y][x] = self.canvas.create_image(
+                x * TILE_SIZE * self.zoom + self.offset_x,
+                y * TILE_SIZE * self.zoom + self.offset_y,
+                anchor="nw",
+                image=obj_img
+            )
 
     def get_tk_tile(self, tile_name):
         key = (tile_name, self.zoom)
@@ -368,7 +388,7 @@ class TileMapEditor(ttk.Frame):
         y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
         if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
             self.object_map[y][x] = None
-            self.draw_map()
+            self.update_object(x, y)
 
     def stop_erase(self, event):
         self.is_erasing = False
@@ -376,12 +396,15 @@ class TileMapEditor(ttk.Frame):
     def _place_or_tile(self, event):
         x = int((event.x - self.offset_x) // (TILE_SIZE * self.zoom))
         y = int((event.y - self.offset_y) // (TILE_SIZE * self.zoom))
+
         if 0 <= x < MAP_WIDTH and 0 <= y < MAP_HEIGHT:
             if self.selected_object:
                 self.object_map[y][x] = self.selected_object
+                self.update_object(x, y)
+
             elif self.selected_tile:
                 self.tile_map[y][x] = self.selected_tile
-            self.draw_map()
+                self.update_tile(x, y)
 
     # --- Pan ---
     def start_pan(self, event):
@@ -391,22 +414,47 @@ class TileMapEditor(ttk.Frame):
     def pan(self, event):
         if not self.is_panning:
             return
+
         dx = event.x - self.pan_start[0]
         dy = event.y - self.pan_start[1]
+
         self.offset_x += dx
         self.offset_y += dy
+
+        self.canvas.move("all", dx, dy)
+
         self.pan_start = (event.x, event.y)
-        self.draw_map()
 
     def stop_pan(self, event):
         self.is_panning = False
 
     # --- Zoom ---
     def change_zoom(self, delta):
-        self.zoom = max(0.25, min(2.0, self.zoom + delta))
+        old_zoom = self.zoom
+        new_zoom = max(0.25, min(2.0, self.zoom + delta))
+
+        # Center of the canvas in canvas coordinates
+        canvas_width = self.canvas.winfo_width()
+        canvas_height = self.canvas.winfo_height()
+        center_x = canvas_width / 2
+        center_y = canvas_height / 2
+
+        # Map coordinates under canvas center before zoom
+        map_x = (center_x - self.offset_x) / old_zoom
+        map_y = (center_y - self.offset_y) / old_zoom
+
+        # Update zoom
+        self.zoom = new_zoom
+
+        # Adjust offsets so center stays at the same map point
+        self.offset_x = center_x - map_x * self.zoom
+        self.offset_y = center_y - map_y * self.zoom
+
+        # Redraw everything
         self.draw_map()
 
     def mouse_zoom(self, event):
+        # Determine zoom direction
         if hasattr(event, "delta"):
             direction = 1 if event.delta > 0 else -1
         elif hasattr(event, "num"):
@@ -415,17 +463,32 @@ class TileMapEditor(ttk.Frame):
             return
 
         old_zoom = self.zoom
-        self.zoom = max(0.25, min(2.0, self.zoom + 0.25 * direction))
+        new_zoom = max(0.25, min(2.0, self.zoom + 0.25 * direction))
 
-        # Zoom relative to cursor
+        # Cursor position in canvas coordinates
         cursor_x = self.canvas.canvasx(event.x)
         cursor_y = self.canvas.canvasy(event.y)
-        self.offset_x -= (cursor_x - self.offset_x) * \
-            (self.zoom / old_zoom - 1)
-        self.offset_y -= (cursor_y - self.offset_y) * \
-            (self.zoom / old_zoom - 1)
 
+        # Map coordinates under cursor before zoom
+        map_x = (cursor_x - self.offset_x) / old_zoom
+        map_y = (cursor_y - self.offset_y) / old_zoom
+
+        # Update zoom
+        self.zoom = new_zoom
+
+        # Adjust offsets so the map point under cursor stays the same
+        self.offset_x = cursor_x - map_x * self.zoom
+        self.offset_y = cursor_y - map_y * self.zoom
+
+        # Redraw everything at new zoom
         self.draw_map()
+
+    def refresh_zoom_images(self):
+        for y in range(MAP_HEIGHT):
+            for x in range(MAP_WIDTH):
+                self.update_tile(x, y)
+                if self.object_map[y][x]:
+                    self.update_object(x, y)
 
     # --- Save / Load ---
     def save_map(self):
