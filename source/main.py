@@ -188,19 +188,6 @@ class TileMapEditor(ttk.Frame):
         self.tk_objects_full = {}
         self.objects = {}
 
-        # --- Top toolbar ---
-        top_frame = ttk.Frame(self)
-        top_frame.pack(side="top", fill="x", padx=5, pady=5)
-
-        ttk.Button(top_frame, text="Load Map",
-                   command=self.load_map).pack(side="left", padx=5)
-        ttk.Button(top_frame, text="Save Map",
-                   command=self.save_map).pack(side="left", padx=5)
-        ttk.Button(top_frame, text="Zoom +",
-                   command=lambda: self.change_zoom(0.25)).pack(side="left", padx=2)
-        ttk.Button(top_frame, text="Zoom -",
-                   command=lambda: self.change_zoom(-0.25)).pack(side="left", padx=2)
-
         # --- Main canvas ---
         self.canvas = tk.Canvas(self, bg="black")
         self.canvas.pack(side="left", fill="both", expand=True)
@@ -208,6 +195,19 @@ class TileMapEditor(ttk.Frame):
         # --- Side panel ---
         self.panel = ttk.Frame(self)
         self.panel.pack(side="right", fill="y", padx=5, pady=5)
+
+        # --- Map Controls ---
+        controls_frame = ttk.Frame(self.panel)
+        controls_frame.pack(pady=(0, 10))  # spacing before Tiles
+
+        ttk.Button(controls_frame, text="Load Map",
+                   command=self.load_map).pack(side="left", padx=2)
+        ttk.Button(controls_frame, text="Save Map",
+                   command=self.save_map).pack(side="left", padx=2)
+        ttk.Button(controls_frame, text="Zoom +",
+                   command=lambda: self.change_zoom(0.25)).pack(side="left", padx=2)
+        ttk.Button(controls_frame, text="Zoom -",
+                   command=lambda: self.change_zoom(-0.25)).pack(side="left", padx=2)
 
         # --- Tiles ---
         ttk.Label(self.panel, text="Tiles", font=(
