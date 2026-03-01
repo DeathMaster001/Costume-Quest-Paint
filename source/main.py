@@ -192,14 +192,14 @@ class TileMapEditor(ttk.Frame):
         top_frame = ttk.Frame(self)
         top_frame.pack(side="top", fill="x", padx=5, pady=5)
 
+        ttk.Button(top_frame, text="Load Map",
+                   command=self.load_map).pack(side="left", padx=5)
+        ttk.Button(top_frame, text="Save Map",
+                   command=self.save_map).pack(side="left", padx=5)
         ttk.Button(top_frame, text="Zoom +",
                    command=lambda: self.change_zoom(0.25)).pack(side="left", padx=2)
         ttk.Button(top_frame, text="Zoom -",
                    command=lambda: self.change_zoom(-0.25)).pack(side="left", padx=2)
-        ttk.Button(top_frame, text="Save Map",
-                   command=self.save_map).pack(side="left", padx=5)
-        ttk.Button(top_frame, text="Load Map",
-                   command=self.load_map).pack(side="left", padx=5)
 
         # --- Main canvas ---
         self.canvas = tk.Canvas(self, bg="black")
@@ -515,5 +515,6 @@ class TileMapEditor(ttk.Frame):
 if __name__ == "__main__":
     root = tk.Tk()
     root.title("Tile Map Editor")
+    root.state("zoomed")
     editor = TileMapEditor(root)
     root.mainloop()
